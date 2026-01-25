@@ -26,7 +26,54 @@ options{
 
 // TODO: Define grammar rules here
 // ======== Parser ==========
-program: EOF;
+
+// Program
+program: declaration* EOF;
+declaration: structDecl | functionDecl;
+
+
+// Type System 
+primitiveType: INT | FLOAT | STRING;
+
+// Struct
+structDecl: STRUCT ID LBRACE memberDecl* RBRACE SEMI;
+memberDecl: paraType ID SEMI;
+paraType: primitiveType | ID; // can be a int, string, float or other struct
+
+structVarDecl: ID ID (ASSIGN (exprList | expression))? SEMI; // contain with and without initialization
+
+// Function
+functionDecl: returnType? ID LPAREN paraList? RPAREN sequenceStmt;
+returnType: primitiveType | VOID | ID; // only function can use void
+paraList: paraType ID (COMMA paraType ID)*;
+
+
+// Statements
+stmt: 
+
+
+
+// Expressions
+expression: assignExpr;
+assignExpr: orExpr ASSIGN assignExpr | orExpr;
+orExpr: orExpr OR andExpr | andExpr;
+andExpr: andExpr AND eqExpr | eqExpr;
+eqExpr: eqExpr (EQ | NEQ) relationalExpr | relationalExpr;
+relationalExpr: relationalExpr (LT | LTE | GT | GTE) addExpr | addExpr;
+addExpr: addExpr (PLUS | MINUS) mulExpr | mulExpr;
+mulExpr: mulExpr (MUL | DIV | MOD) unaryExpr | unaryExpr;
+unaryExpr: (NOT | MINUS | PLUS) unaryExpr | prefixExpr;
+prefixExpr: (INC | DEC) prefixExpr | postfixExpr;
+postfixExpr: postfixExpr (INC | DEC)
+            | primaryExpr
+            | postfixExpr exprList; //function call;
+primaryExpr: ID | FLOATLIT | INTLIT | STRINGLIT 
+            | LPAREN expression RPAREN 
+            | primaryExpr DOT ID;
+
+exprList: LPAREN argList? RPAREN;     // can empty {}, use for function and struct        
+argList: expression (COMMA expression)*;
+
 
 // ======== Lexer ==========
 
@@ -77,6 +124,7 @@ LPAREN: '(';
 RPAREN: ')';
 SEMI: ';';
 COMMA: ',';
+COLON: ':';
 
 // Literal
 fragment Intpart: '0' | [1-9][0-9]*;
