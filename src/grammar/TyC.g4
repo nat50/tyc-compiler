@@ -40,7 +40,6 @@ structDecl: STRUCT ID LBRACE memberDecl* RBRACE SEMI;
 memberDecl: paraType ID SEMI;
 paraType: primitiveType | ID; // can be a int, string, float or other struct
 
-structVarDecl: ID ID (ASSIGN (exprList | expression))? SEMI; // contain with and without initialization
 
 // Function
 functionDecl: returnType? ID LPAREN paraList? RPAREN blockStmt;
@@ -62,22 +61,29 @@ stmt: varDeclStmt
     | exprStmt;
 
 
-varDeclStmt: (AUTO | primitiveType) ID (ASSIGN expression)? SEMI;
+varDeclStmt: varDecl SEMI;
+varDecl: (AUTO | primitiveType) ID (ASSIGN expression)?
+        | ID ID (ASSIGN (expression | structInit))?; // Struct declaration
+structInit : LBRACE argList? RBRACE ;
 
 blockStmt: LBRACE stmt* RBRACE;
 
-assignStmt: ID ASSIGN expression SEMI;
+assignStmt: assignment SEMI;
+assignment   : lvalue ASSIGN expression ;
+lvalue       : ID (DOT ID)* ;
 
 ifStmt: IF LPAREN expression RPAREN stmt (ELSE stmt)?;
 
 whileStmt: WHILE LPAREN expression RPAREN stmt;
 
-forStmt: FOR LPAREN (varDeclStmt | assignStmt | SEMI) expression? SEMI forUpdate? RPAREN stmt;
-forUpdate: ID ASSIGN expression | ID INC | ID DEC | INC ID | DEC ID;
+forStmt: FOR LPAREN forInit? SEMI expression? SEMI forUpdate? RPAREN stmt;
+forInit: varDecl | assignment;
+forUpdate: assignment | incDec;
+incDec: (INC | DEC) lvalue | lvalue (INC | DEC);
 
-switchStmt: SWITCH LPAREN expression RPAREN LBRACE caseClause* RBRACE;
-caseClause: CASE expression COLON stmt*
-            | DEFAULT stmt* COLON;
+switchStmt: SWITCH LPAREN expression RPAREN LBRACE caseSwitch* RBRACE;
+caseSwitch: CASE expression COLON stmt*
+            | DEFAULT COLON stmt*;
 
 breakStmt: BREAK SEMI;
 
@@ -100,12 +106,12 @@ unaryExpr: (NOT | MINUS | PLUS) unaryExpr | prefixExpr;
 prefixExpr: (INC | DEC) prefixExpr | postfixExpr;
 postfixExpr: postfixExpr (INC | DEC)
             | primaryExpr
-            | postfixExpr exprList; //function call;
+            | postfixExpr argFuncList; //function call;
 primaryExpr: ID | FLOATLIT | INTLIT | STRINGLIT 
             | LPAREN expression RPAREN 
             | primaryExpr DOT ID;
 
-exprList: LPAREN argList? RPAREN;     // can empty {}, use for function and struct        
+argFuncList: LPAREN argList? RPAREN;     // can empty (), use for function     
 argList: expression (COMMA expression)*;
 
 
