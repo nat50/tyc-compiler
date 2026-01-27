@@ -43,15 +43,49 @@ paraType: primitiveType | ID; // can be a int, string, float or other struct
 structVarDecl: ID ID (ASSIGN (exprList | expression))? SEMI; // contain with and without initialization
 
 // Function
-functionDecl: returnType? ID LPAREN paraList? RPAREN sequenceStmt;
+functionDecl: returnType? ID LPAREN paraList? RPAREN blockStmt;
 returnType: primitiveType | VOID | ID; // only function can use void
 paraList: paraType ID (COMMA paraType ID)*;
 
 
 // Statements
-stmt: 
+stmt: varDeclStmt
+    | blockStmt
+    | assignStmt
+    | ifStmt
+    | whileStmt
+    | forStmt
+    | switchStmt
+    | breakStmt
+    | continueStmt
+    | returnStmt
+    | exprStmt;
 
 
+varDeclStmt: (AUTO | primitiveType) ID (ASSIGN expression)? SEMI;
+
+blockStmt: LBRACE stmt* RBRACE;
+
+assignStmt: ID ASSIGN expression SEMI;
+
+ifStmt: IF LPAREN expression RPAREN stmt (ELSE stmt)?;
+
+whileStmt: WHILE LPAREN expression RPAREN stmt;
+
+forStmt: FOR LPAREN (varDeclStmt | assignStmt | SEMI) expression? SEMI forUpdate? RPAREN stmt;
+forUpdate: ID ASSIGN expression | ID INC | ID DEC | INC ID | DEC ID;
+
+switchStmt: SWITCH LPAREN expression RPAREN LBRACE caseClause* RBRACE;
+caseClause: CASE expression COLON stmt*
+            | DEFAULT stmt* COLON;
+
+breakStmt: BREAK SEMI;
+
+continueStmt: CONTINUE SEMI;
+
+returnStmt: RETURN expression? SEMI;
+
+exprStmt: expression SEMI;
 
 // Expressions
 expression: assignExpr;
