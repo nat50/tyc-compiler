@@ -81,9 +81,9 @@ forInit: varDecl | assignment;
 forUpdate: assignment | incDec;
 incDec: (INC | DEC) lvalue | lvalue (INC | DEC);
 
-switchStmt: SWITCH LPAREN expression RPAREN LBRACE caseSwitch* RBRACE;
-caseSwitch: CASE expression COLON stmt*
-            | DEFAULT COLON stmt*;
+switchStmt: SWITCH LPAREN expression RPAREN LBRACE caseSwitch* defaultSwitch? caseSwitch* RBRACE;
+caseSwitch: CASE expression COLON stmt*;
+defaultSwitch: DEFAULT COLON stmt*;
 
 breakStmt: BREAK SEMI;
 
