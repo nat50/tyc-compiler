@@ -186,6 +186,6 @@ LINE_COMMENT: '//' ~[\r\n]* -> skip;
 WS : [ \t\r\n\f]+ -> skip ; // skip spaces, tabs, insert \f
 
 // Error tokens
-ILLEGAL_ESCAPE: '"' (~["\\\r\n] | '\\' [btnfr"\\])* '\\' ~[btnfr"\\];
-UNCLOSE_STRING: '"' (~["\\\r\n] | '\\' [btnfr"\\])* ('\r'? '\n' | EOF);
+ILLEGAL_ESCAPE: '"' (~["\\\r\n] | '\\' [btnfr"\\])* '\\' ~[btnfr"\\\r\n];
+UNCLOSE_STRING: '"' (~["\\\r\n] | '\\' [btnfr"\\])* '\\'? ('\r'? '\n' | EOF);
 ERROR_CHAR: .;
