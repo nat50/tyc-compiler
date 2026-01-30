@@ -95,7 +95,7 @@ exprStmt: expression SEMI;
 
 // Expressions
 expression: assignExpr;
-assignExpr: orExpr ASSIGN assignExpr | orExpr;
+assignExpr: lvalue ASSIGN assignExpr | orExpr;
 orExpr: orExpr OR andExpr | andExpr;
 andExpr: andExpr AND eqExpr | eqExpr;
 eqExpr: eqExpr (EQ | NEQ) relationalExpr | relationalExpr;
@@ -105,11 +105,11 @@ mulExpr: mulExpr (MUL | DIV | MOD) unaryExpr | unaryExpr;
 unaryExpr: (NOT | MINUS | PLUS) unaryExpr | prefixExpr;
 prefixExpr: (INC | DEC) prefixExpr | postfixExpr;
 postfixExpr: postfixExpr (INC | DEC)
-            | primaryExpr
-            | postfixExpr argFuncList; //function call;
-primaryExpr: ID | FLOATLIT | INTLIT | STRINGLIT 
-            | LPAREN expression RPAREN 
-            | primaryExpr DOT ID;
+            | postfixExpr argFuncList //function call;
+            | primaryExpr;
+primaryExpr: primaryExpr DOT ID
+            | ID | FLOATLIT | INTLIT | STRINGLIT 
+            | LPAREN expression RPAREN;
 
 argFuncList: LPAREN argList? RPAREN;     // can empty (), use for function     
 argList: expression (COMMA expression)*;
