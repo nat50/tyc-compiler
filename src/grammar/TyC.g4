@@ -16,6 +16,10 @@ def emit(self):
     elif tk == self.ERROR_CHAR:
         result = super().emit();
         raise ErrorToken(result.text); 
+    elif tk == self.STRINGLIT:
+        result = super().emit();
+        result.text = result.text[1:-1];
+        return result;
     else:
         return super().emit();
 }
