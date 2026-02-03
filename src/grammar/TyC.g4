@@ -168,7 +168,7 @@ COLON: ':';
 
 // Literal
 fragment Intpart: '0' | [1-9][0-9]*;
-fragment Snotation: [eE] '-'? [0-9]+;
+fragment Snotation: [eE] [+-]? [0-9]+;
 FLOATLIT: (Intpart('.'[0-9]* Snotation?|Snotation))
             |'.'[0-9]+Snotation?;
 
