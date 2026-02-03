@@ -179,7 +179,7 @@ The `ASTGeneration` class must:
 
 6. **Run tests:**
    ```bash
-   python3 run.py test-lexer
+   .\.venv\Scripts\python.exe -m pytest tests\test_lexer.py
    python3 run.py test-parser
    python3 run.py test-ast
    ```
