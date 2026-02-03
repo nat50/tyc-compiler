@@ -63,8 +63,8 @@ stmt: varDeclStmt
 
 varDeclStmt: varDecl SEMI;
 varDecl: (AUTO | primitiveType) ID (ASSIGN expression)?
-        | ID ID (ASSIGN (expression | structInit))?; // Struct declaration
-structInit : LBRACE argList? RBRACE ;
+        | ID ID (ASSIGN expression)?; // Struct declaration
+
 
 blockStmt: LBRACE stmt* RBRACE;
 
@@ -109,10 +109,12 @@ postfixExpr: postfixExpr (INC | DEC)
             | primaryExpr;
 primaryExpr: primaryExpr DOT ID
             | ID | FLOATLIT | INTLIT | STRINGLIT 
-            | LPAREN expression RPAREN;
+            | LPAREN expression RPAREN
+            | structInit;
 
 argFuncList: LPAREN argList? RPAREN;     // can empty (), use for function     
 argList: expression (COMMA expression)*;
+structInit : LBRACE argList? RBRACE ;
 
 
 // ======== Lexer ==========
