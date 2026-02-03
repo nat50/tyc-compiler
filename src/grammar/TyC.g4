@@ -158,8 +158,6 @@ ASSIGN: '=';
 DOT: '.';
 
 // Separator
-LBRACK: '[';
-RBRACK: ']';
 LBRACE: '{';
 RBRACE: '}';
 LPAREN: '(';
