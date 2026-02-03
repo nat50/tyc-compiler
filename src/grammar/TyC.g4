@@ -9,10 +9,10 @@ def emit(self):
     tk = self.type
     if tk == self.UNCLOSE_STRING:       
         result = super().emit();
-        raise UncloseString(result.text);
+        raise UncloseString(result.text[1:]);
     elif tk == self.ILLEGAL_ESCAPE:
         result = super().emit();
-        raise IllegalEscape(result.text);
+        raise IllegalEscape(result.text[1:]);
     elif tk == self.ERROR_CHAR:
         result = super().emit();
         raise ErrorToken(result.text); 
